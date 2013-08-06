@@ -8,9 +8,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-import com.google.common.collect.Interner;
-import com.google.common.collect.Interners;
-
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.GenerateMicroBenchmark;
 import org.openjdk.jmh.annotations.Mode;
@@ -103,30 +100,6 @@ public class InternBenchmark
     }
 
 
-    @GenerateMicroBenchmark
-    @BenchmarkMode(Mode.SampleTime)
-    public int testShortStringStrongGuavaIntern(ThreadUniqueId id, StrongGuavaInternImpl intern) {
-        return runTest(id, intern, N_STRINGS_LEN);
-    }
-
-    @GenerateMicroBenchmark
-    @BenchmarkMode(Mode.SampleTime)
-    public int testLongStringStrongGuavaIntern(ThreadUniqueId id, StrongGuavaInternImpl intern) {
-        return runTest(id, intern, N_STRINGS_LEN * 10);
-    }
-
-    @GenerateMicroBenchmark
-    @BenchmarkMode(Mode.SampleTime)
-    public int testShortStringWeakGuavaIntern(ThreadUniqueId id, WeakGuavaInternImpl intern) {
-        return runTest(id, intern, N_STRINGS_LEN);
-    }
-
-    @GenerateMicroBenchmark
-    @BenchmarkMode(Mode.SampleTime)
-    public int testLongStringWeakGuavaIntern(ThreadUniqueId id, WeakGuavaInternImpl intern) {
-        return runTest(id, intern, N_STRINGS_LEN * 10);
-    }
-
     public interface InternImpl
     {
         String intern(String input);
@@ -177,30 +150,6 @@ public class InternBenchmark
         {
             String result = interner.putIfAbsent(input, input);
             return result == null ? input : result;
-        }
-    }
-
-    @State(Scope.Benchmark)
-    public static class StrongGuavaInternImpl implements InternImpl
-    {
-        private final Interner<String> guavaInterner = Interners.newStrongInterner();
-
-        @Override
-        public String intern(String input)
-        {
-            return guavaInterner.intern(input);
-        }
-    }
-
-    @State(Scope.Benchmark)
-    public static class WeakGuavaInternImpl implements InternImpl
-    {
-        private final Interner<String> guavaInterner = Interners.newWeakInterner();
-
-        @Override
-        public String intern(String input)
-        {
-            return guavaInterner.intern(input);
         }
     }
 }
