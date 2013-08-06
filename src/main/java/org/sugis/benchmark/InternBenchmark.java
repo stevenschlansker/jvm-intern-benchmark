@@ -15,6 +15,7 @@ import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 
 @SuppressWarnings("static-method")
+@BenchmarkMode(Mode.SampleTime)
 public class InternBenchmark
 {
     private static final int N_STRINGS = 10000;
@@ -52,49 +53,41 @@ public class InternBenchmark
     }
 
     @GenerateMicroBenchmark
-    @BenchmarkMode(Mode.SampleTime)
     public int testShortStringNoIntern(ThreadUniqueId id) {
         return runTest(id, new NopInternImpl(), N_STRINGS_LEN);
     }
 
     @GenerateMicroBenchmark
-    @BenchmarkMode(Mode.SampleTime)
     public int testLongStringNoIntern(ThreadUniqueId id) {
         return runTest(id, new NopInternImpl(), N_STRINGS_LEN * 10);
     }
 
     @GenerateMicroBenchmark
-    @BenchmarkMode(Mode.SampleTime)
     public int testShortStringJdkIntern(ThreadUniqueId id) {
         return runTest(id, new JdkInternImpl(), N_STRINGS_LEN);
     }
 
     @GenerateMicroBenchmark
-    @BenchmarkMode(Mode.SampleTime)
     public int testLongStringJdkIntern(ThreadUniqueId id) {
         return runTest(id, new JdkInternImpl(), N_STRINGS_LEN * 10);
     }
 
     @GenerateMicroBenchmark
-    @BenchmarkMode(Mode.SampleTime)
     public int testShortStringShmIntern(ThreadUniqueId id, ShmInternImpl intern) {
         return runTest(id, intern, N_STRINGS_LEN);
     }
 
     @GenerateMicroBenchmark
-    @BenchmarkMode(Mode.SampleTime)
     public int testLongStringShmIntern(ThreadUniqueId id, ShmInternImpl intern) {
         return runTest(id, intern, N_STRINGS_LEN * 10);
     }
 
     @GenerateMicroBenchmark
-    @BenchmarkMode(Mode.SampleTime)
     public int testShortStringChmIntern(ThreadUniqueId id, ChmInternImpl chmIntern) {
         return runTest(id, chmIntern, N_STRINGS_LEN);
     }
 
     @GenerateMicroBenchmark
-    @BenchmarkMode(Mode.SampleTime)
     public int testLongStringChmIntern(ThreadUniqueId id, ChmInternImpl chmIntern) {
         return runTest(id, chmIntern, N_STRINGS_LEN * 10);
     }
